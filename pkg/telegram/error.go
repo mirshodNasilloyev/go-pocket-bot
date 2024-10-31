@@ -13,22 +13,21 @@ var (
 )
 
 func (b *Bot) handleError(chatID int64, err error) {
-	msg := tgbotapi.NewMessage(chatID, "Error was found")
+	msg := tgbotapi.NewMessage(chatID, b.messages.Default)
 	switch err {
 	case errorInvalidLink:
-		msg.Text = "Bu message link emas"
+		msg.Text = b.messages.InvalidURL
 		b.bot.Send(msg)
 	case errorUnautorized:
-		msg.Text = "Siz avtorizatsiyadan o'tmagansiz. Buni amalga oshirish uchun /start ni bosing"
+		msg.Text = b.messages.Unautorized
 		b.bot.Send(msg)
 	case errorUnabletoSave:
-		msg.Text = "Opps, Saqlashni iloji bo'lmadi. Birozdan so'ng qayta urinib ko'ring"
+		msg.Text = b.messages.UnableToSave
 		b.bot.Send(msg)
 	case errorUnavailableCommand:
-		msg.Text = "Siz mavjud bo'lmagan comandani berdingiz"
+		msg.Text = b.messages.UnknownCommand
 		b.bot.Send(msg)
 	default:
 		b.bot.Send(msg)
 	}
-
 }

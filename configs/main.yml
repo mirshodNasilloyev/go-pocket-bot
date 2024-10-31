@@ -1,6 +1,6 @@
-db_file: "bot.db"
+db_path: "bot.db"
 
-bot_url: "https://t.me/hr_managment_bot"
+telegram_bot_url: "https://t.me/hr_managment_bot"
 
 messages:
   responses:

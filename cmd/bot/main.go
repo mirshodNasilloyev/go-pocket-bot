@@ -19,25 +19,24 @@ func main() {
 	}
 	log.Println(cfg)
 
-	bot, err := tgbotapi.NewBotAPI("7740158252:AAFoi8HjtQEiP2dvuY8SlqDop2vYn5vjzH8")
+	bot, err := tgbotapi.NewBotAPI(cfg.TelegramToken)
 	if err != nil {
 		log.Fatal("Incorrect token: ", err)
 	}
 	bot.Debug = true
 
-	pocketClient, err := pocket.NewClient("112458-1d1ec5143833166618cd3bd")
+	pocketClient, err := pocket.NewClient(cfg.PockectConsumerKey)
 	if err != nil {
 		log.Fatal("Incorrect pocket client: ", err)
 	}
-	db, err := initDB()
+	db, err := initDB(cfg)
 	if err != nil {
 		log.Fatal("Incorrect db: ", err)
 	}
 
 	tokenRepository := boltdb.NewTokenRepository(db)
-	authorizedServer := server.NewAuthorizationServer(pocketClient, tokenRepository, "https://t.me/hr_managment_bot")
-
-	telegramBot := telegram.NewBot(bot, pocketClient, tokenRepository, "http://localhost/")
+	telegramBot := telegram.NewBot(bot, pocketClient, tokenRepository, cfg.AuthServerURL, cfg.Messages)
+	authorizedServer := server.NewAuthorizationServer(pocketClient, tokenRepository, cfg.TelegramBotURL)
 	go func() {
 		if err := telegramBot.Start(); err != nil {
 			log.Fatal(err)
@@ -50,8 +49,8 @@ func main() {
 
 }
 
-func initDB() (*bolt.DB, error) {
-	db, err := bolt.Open("bot.db", 0600, nil)
+func initDB(cfg *config.Config) (*bolt.DB, error) {
+	db, err := bolt.Open(cfg.DBPath, 0600, nil)
 	if err != nil {
 		return nil, err
 	}

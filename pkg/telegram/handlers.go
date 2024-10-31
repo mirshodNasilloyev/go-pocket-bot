@@ -8,9 +8,7 @@ import (
 )
 
 const (
-	commandStart       = "start"
-	replyStartTemplate = "Salom! Pocket akkauntingizda havolalarni saqlash uchun, avvalo menga bunga ruxsat berishingiz kerak. Buning uchun quyidagi havolaga o'ting:\n %s"
-	replyAutorizedText = "Siz allaqachon avtorizatsiyadan o'tgansiz\n"
+	commandStart = "start"
 )
 
 func (b *Bot) handleCommands(message *tgbotapi.Message) error {
@@ -24,7 +22,7 @@ func (b *Bot) handleCommands(message *tgbotapi.Message) error {
 }
 
 func (b *Bot) handleMessage(message *tgbotapi.Message) error {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Link saved successufully")
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.SavedSuccessfully)
 	_, err := url.ParseRequestURI(message.Text)
 	if err != nil {
 		return errorInvalidLink
@@ -49,11 +47,13 @@ func (b *Bot) handleStartCommand(message *tgbotapi.Message) error {
 	if err != nil {
 		return b.initAutorizationProcess(message)
 	}
-	msg := tgbotapi.NewMessage(message.Chat.ID, replyAutorizedText)
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.AlreadyAuthorized)
 	msg.ReplyToMessageID = message.MessageID
 	_, err = b.bot.Send(msg)
 	return err
 }
 func (b *Bot) handleUnknownCommand(message *tgbotapi.Message) error {
-	return errorUnavailableCommand
+	msg := tgbotapi.NewMessage(message.Chat.ID, b.messages.UnknownCommand)
+	_, err := b.bot.Send(msg)
+	return err
 }
