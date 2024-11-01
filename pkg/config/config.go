@@ -59,9 +59,9 @@ func Init() (*Config, error) {
 }
 
 func parseEnv(cfg *Config) error {
-	os.Getenv("TOKEN")
-	os.Getenv("CONSUMER_KEY")
-	os.Getenv("AUTH_SERVER_URL")
+	os.Setenv("TOKEN", "7835489392:AAF-rpj4njZ4fi2NZTjfBBDMaHV2x276-Uo")
+	os.Setenv("CONSUMER_KEY", "112458-1d1ec5143833166618cd3bd")
+	os.Setenv("AUTH_SERVER_URL", "http://localhost/")
 	if err := viper.BindEnv("token"); err != nil {
 		return err
 	}
