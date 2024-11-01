@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"os"
 )
 
 type Config struct {
@@ -58,6 +59,9 @@ func Init() (*Config, error) {
 }
 
 func parseEnv(cfg *Config) error {
+	os.Getenv("TOKEN")
+	os.Getenv("CONSUMER_KEY")
+	os.Getenv("AUTH_SERVER_URL")
 	if err := viper.BindEnv("token"); err != nil {
 		return err
 	}
